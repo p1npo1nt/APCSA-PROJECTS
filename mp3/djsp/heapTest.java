@@ -2,12 +2,11 @@ package djsp;
 
 public class heapTest {
     public static void main(String[] args) {
-        char[] testNodes = {'A', 'D', 'C', 'F', 'B', 'E', 'H', 'G'};
-        myHeap heap = new myHeap(8);
+        myHeap<Vertex> heap = new myHeap<>(8);
 
-        for(char c : testNodes) {
-            heap.push(c);
-        }
+        heap.push(new Vertex('3', 'X'));
+        heap.push(new Vertex('1', 'Y'));
+        heap.push(new Vertex('5', 'Z'));
 
         heap.print();
     }
