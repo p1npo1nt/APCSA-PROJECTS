@@ -1,85 +1,39 @@
 package bfs;
 
-import java.util.*;
+public class myQueue {
+    
+    public static final int max = 1000;
+    private int front; // index of front
+    private int size; // amount of elements in the queue
+    private int cap; // max size of the queue
+    char[] a;
 
-public class Graph implements Iterable<Character> {
-    private final boolean[][] adj;
-
-    public Graph (boolean[][] adj) {
-        // constructor no. 1
-        this.adj = adj;
+    public myQueue() {
+        a = new char[max]; // creating a character array
+        this.front = 0;
+        this.size = 0;
+        this.cap = max;
     }
 
-    public Graph (Graph graph) {
-        // constructor no. 2
-        int dim = graph.getSize();
-        this.adj = new boolean[dim][dim];
-        boolean[][] adjPrevious = graph.getMatrix();
-
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                this.adj[i][j] = adjPrevious[i][j];
-            }
-        }
+    // enqueue
+    public void eq(char s) {
+        if(size==cap) {throw new IllegalArgumentException("Queue is full");}
+        a[(front+size)%cap] = s; // calculate rear index and insert s there
+        size+=1;
     }
 
-    public boolean[][] getMatrix() {
-        return adj;
+    // dequeue
+    public char dq() {
+        if (size==0) {throw new IllegalArgumentException("Queue is empty");}
+        char t = a[front];
+        front = (front+1)%cap;
+        size-=1;
+        return t;
     }
 
-    public boolean isAdjacent(char A, char B) {
-        return adj[charToInt(A)][charToInt(B)];
-    }
+    public boolean isEmpty() {return size==0;}
 
-    public ArrayList<Character> allAdj(char A) {
-        // all vertices adjacent to A
-        ArrayList<Character> adjList = new ArrayList<>();
+    public boolean isFull() {return size==cap;}
 
-        int k = charToInt(A);
-
-        for (int i = 0; i < getSize(); i++) {
-            if (adj[k][i]) {
-                adjList.add(intToChar(i));
-            }
-        }
-
-        return adjList;
-    }
-
-    public int getSize() {
-        // return size of the graph (No. of vertices)
-        return adj[0].length;
-    }
-
-    public int charToInt(char vertex) {
-        return vertex - 'A';
-    }
-
-    public char intToChar(int index) {
-        return (char) ('A' + index);
-    }
-
-    public Iterator<Character> iterator() {
-        return new GraphIter(this.getSize());
-    }
-
-    private class GraphIter implements Iterator<Character> {
-        private char t;
-        private int size;
-
-        private GraphIter(int size) {
-            t = 'A';
-            this.size = size;
-        }
-
-        public boolean hasNext() {
-            return ((t - 65) < size);
-        }
-
-        public Character next() {
-            char store = t;
-            t = (char) (t+1);
-            return store;
-        }
-    }
+    public int getSize() {return size;}
 }
