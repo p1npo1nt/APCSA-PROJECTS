@@ -3,14 +3,14 @@ package djsp;
 import java.util.*;
 
 public class shortestPath extends Graph {
-    private char start;
+    private Vertex start;
 
-    public shortestPath(boolean[][] adj, char start) {
+    public shortestPath(int[][] adj, Vertex start) {
         super(adj);
         this.start=start;
     }
     
-    public shortestPath(Graph graph, char start) {
+    public shortestPath(Graph graph, Vertex start) {
         super(graph);
         this.start=start;
     }
@@ -21,26 +21,28 @@ public class shortestPath extends Graph {
 
     private class shortestPathIter implements Iterator<Character> {
     
-        private myHeap heap;
+        private myHeap<Vertex> heap;
         private int[] distances;
         private boolean[] visited;
         private Graph graph;
         private char nextVertex;
-        private boolean hasNext;
         
-        private shortestPathIter(Graph graph, char start) {
+        private shortestPathIter(Graph graph, Vertex start) {
             this.graph=graph;
 
             int size = graph.getSize();
-            this.heap = new myHeap(size);
+            this.heap = new myHeap<>(size);
             this.distances = new int[size];
             this.visited = new boolean[size];
-            this.visited[graph.charToInt(start)] = true;
+            this.visited[graph.charToInt(start.getVertex())] = true;
 
             // setup distances, only start vertex has distance 0, all others have "infinity" because
             // we haven't found path to them yet
-            for(int k : distances) {distances[k]=Integer.MAX_VALUE;}
-            distances[charToInt(start)]=0;
+            for (int k : distances) {
+                System.out.println(k);
+                k=Integer.MAX_VALUE;
+            }
+            distances[charToInt(start.getVertex())]=0;
 
             heap.push(start);
 
