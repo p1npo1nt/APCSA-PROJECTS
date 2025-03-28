@@ -1,30 +1,32 @@
 package djsp;
 
-public class myHeap {
+public class myHeap<E extends Comparable<E>> {
     // min heap
     // node at index i, parent at (i-1)/2, left child at 2i+1, right child at 2i+2
-    private char[] h;
+    private E[] h;
     private int cap; // max size
     private int size; // current size
 
+    @SuppressWarnings("unchecked")
     public myHeap(int cap) {
         this.cap = cap;
-        h = new char[cap];
+        h = (E[]) new Comparable[cap];
         this.size = 0;
     }
 
-    public void push(char s) {
+
+    public void push(E s) {
         if (isFull()) {throw new IllegalArgumentException("Heap is full");}
         h[size] = s; // add at end of heap 
         heapifyUp(size); // bubble up to put s in proper position
         size+=1;
     }
 
-    public char uproot() {
+    public E uproot() {
         // get and remove root (index=0) i.e. min element of heap
         // replace min w/ last element, heapify down 
         if (isEmpty()) {throw new IllegalArgumentException("Heap is empty");}
-        char t = h[0]; // store root
+        E t = h[0]; // store root
         h[0] = h[size-1];
         size-=1;
         heapifyDown(0); // restore heap property
@@ -37,12 +39,12 @@ public class myHeap {
         // compare with parent and swap if smaller, repeat until in correct position
 
         while(n>0) {
-            if (h[parent(n)] <= h[n]) {
+            if (h[parent(n)].compareTo(h[n]) <= 0) {
                 // heap property already satisfied
                 break;
             } else {
                 // if h[n] greater than parent, swap
-                char t = h[parent(n)];
+                E t = h[parent(n)];
                 h[parent(n)] = h[n];
                 h[n] = t;
                 n = parent(n);
@@ -60,15 +62,15 @@ public class myHeap {
             smallest = n;
             
             // check if left child exists and is smaller than current smallest
-            if (leftChild < size && h[leftChild] < h[smallest]) {smallest = leftChild;}
+            if (leftChild < size && h[leftChild].compareTo(h[smallest]) < 0) {smallest = leftChild;}
             
             // check if right child exists and is smaller than current smallest
-            if (rightChild < size && h[rightChild] < h[smallest]) {smallest = rightChild;}
+            if (rightChild < size && h[rightChild].compareTo(h[smallest]) < 0) {smallest = rightChild;}
             
             // if smallest is still n, heap property is satisfied
             if (smallest==n) {break;}
             
-            char temp = h[n];
+            E temp = h[n];
             h[n] = h[smallest];
             h[smallest] = temp;
             
@@ -77,8 +79,10 @@ public class myHeap {
         }
     }
 
-    public char peek() {if(!isEmpty()) {return h[0];} 
-        else {throw new IllegalArgumentException("Can't peek, heap is empty");}} // return min
+    public E peek() {
+        if(!isEmpty()) {return h[0];} 
+        else {throw new IllegalArgumentException("Can't peek, heap is empty");}
+    } // return min
 
     public int parent(int n) {return (n-1)/2;}
     public int Lchild(int n) {return 2*n+1;}
@@ -112,7 +116,7 @@ public class myHeap {
             System.out.print("Level " + level + ": ");
             
             for (int i = 0; i < levelSize && printed < size; i++) {
-                System.out.print(h[printed] + " ");
+                System.out.print(h[printed].toString() + " ");
                 printed++;
             }
             
