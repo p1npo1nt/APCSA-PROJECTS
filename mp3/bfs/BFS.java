@@ -26,7 +26,7 @@ public class BFS extends Graph {
     
         private BFSIter(Graph graph, char start) {
             this.graph = graph;
-            this.queue = new myQueue();
+            this.queue = new myQueue(graph.getSize());
             this.isVisited = new boolean[graph.getSize()];
             
             // mark start as visited before enqueuing
