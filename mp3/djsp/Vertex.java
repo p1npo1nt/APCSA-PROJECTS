@@ -1,31 +1,48 @@
 package djsp;
 
-import java.util.*;
-
 public class Vertex implements Comparable<Vertex> {
-    // (weight, vertex) pair class
+    //vertex class which stores both weight and vertex name
+    
+    private int weight;
+    private char vertex;
 
-    private ArrayList<Character> pair;
-
+    public Vertex(char v) {
+        this.vertex = v;
+        this.weight = Integer.MAX_VALUE; //default to infinity
+    }
+    
+    public Vertex(int weight, char v) {
+        this.weight = weight;
+        this.vertex = v;
+    }
+    
     public Vertex(char w, char v) {
-        pair = new ArrayList<>();
-        pair.add(w);
-        pair.add(v);
+        this.vertex = v;
+        //try to parse the weight as a digit, default to MAX_VALUE if not a digit
+        if (Character.isDigit(w)) {
+            this.weight = Character.getNumericValue(w);
+        } else {
+            this.weight = Integer.MAX_VALUE;
+        }
     }
 
     public int getWeight() {
-        return Character.getNumericValue(pair.get(0));
+        return weight;
     }
 
     public char getVertex() {
-        return pair.get(1);
+        return vertex;
+    }
+    
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public int compareTo(Vertex second) {
-        return Integer.compare(this.getWeight(), second.getWeight());
+        return Integer.compare(this.weight, second.weight);
     }
 
     public String toString() {
-        return "(Weight: " + String.valueOf(getWeight()) + " Vertex: " + getVertex() + ") ";
+        return "(Weight: " + weight + " Vertex: " + vertex + ")";
     }
 }

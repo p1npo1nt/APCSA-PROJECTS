@@ -3,42 +3,50 @@ package djsp;
 import java.util.*;
 
 public class Graph implements Iterable<Character> {
-    private final boolean[][] adj;
+    private final int[][] adj;
 
-    public Graph (boolean[][] adj) {
+    public Graph(int[][] adj) {
         // constructor no. 1
-        this.adj = adj;
-    }
-
-    public Graph (Graph graph) {
-        // constructor no. 2
-        int dim = graph.getSize();
-        this.adj = new boolean[dim][dim];
-        boolean[][] adjPrevious = graph.getMatrix();
-
+        int dim = adj.length;
+        this.adj = new int[dim][dim];
+        
+        // copy the values from the input matrix
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
-                this.adj[i][j] = adjPrevious[i][j];
+                this.adj[i][j] = adj[i][j];
             }
         }
     }
-
-    public boolean[][] getMatrix() {
+    
+    public Graph(Graph graph) {
+        //constructor no. 2
+        int dim = graph.getSize();
+        this.adj = new int[dim][dim];
+        
+        //copy the values from the original graph's matrix
+        int[][] origMatrix = graph.getMatrix();
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                this.adj[i][j] = origMatrix[i][j];
+            }
+        }
+    }
+    public int[][] getMatrix() {
         return adj;
     }
 
     public boolean isAdjacent(char A, char B) {
-        return adj[charToInt(A)][charToInt(B)];
+        return adj[charToInt(A)][charToInt(B)] > 0;
     }
 
     public ArrayList<Character> allAdj(char A) {
-        // all vertices adjacent to A
+        //all vertices adjacent to A
         ArrayList<Character> adjList = new ArrayList<>();
 
         int k = charToInt(A);
 
         for (int i = 0; i < getSize(); i++) {
-            if (adj[k][i]) {
+            if (adj[k][i] > 0) {
                 adjList.add(intToChar(i));
             }
         }
@@ -46,8 +54,17 @@ public class Graph implements Iterable<Character> {
         return adjList;
     }
 
+    public int getWeight(char A, char B) {
+        int weight = adj[charToInt(A)][charToInt(B)];
+        if (weight>0) {
+            return weight;
+        } else {
+            return Integer.MAX_VALUE;
+        }
+    }
+
     public int getSize() {
-        // return size of the graph (No. of vertices)
+        //return size of the graph (No. of vertices)
         return adj[0].length;
     }
 
