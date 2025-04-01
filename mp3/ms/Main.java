@@ -1,109 +1,85 @@
 package ms;
 
-import java.util.Scanner;
+import java.util.*;
 
-//merge sort
+//mergesort
 
 public class Main {
     public static void main(String[] args) {
-        String[] A = getData();
-        System.out.println("Length of A: " + A.length);
-        ms(A);
-
-        for(String s : A) {
-            System.out.println(s);
-        }
+        ArrayList<String> A = getData();
+        A = ms(A);
+        for(String s : A) System.out.println(s);
     }
 
-    public static void ms(String[] a) {
-        if (a==null || a.length <=1) return;
-        split(a, 0, a.length-1);
+    public static ArrayList<String> ms(ArrayList<String> a) {
+
+        //as per spec, split input, run sort on itself and on the split (recursion), 
+        //finally merge and return
+        if(a.size()>1){
+            ArrayList<String> l = split(a);
+            a = ms(a);
+            l = ms(l);
+            a = merge(a,l);
+        }
+        
+        return a;
     }
 
-    public static void split(String[] a, int l, int r) {
-        if (l<r) {
-            int mid = l+(r-l)/2;
-            split(a, l, mid);
-            split(a, mid+1, r);
-            merge(a, l, mid, r);
+    public static ArrayList<String> split(ArrayList<String> a) {
+        ArrayList<String> l = new ArrayList<String>();
+
+        int mid = a.size()/2;
+        int i=mid;
+        while(i<a.size()) {
+            l.add(l.size(), a.get(i));
+            i++;
         }
+
+        while(a.size()>mid) a.remove(a.size()-1);
+        
+        return l;
     }
 
-    public static void merge(String[] a, int l, int mid, int r) {
-     
-        int size1 = mid-l+1;
-        int size2 = r-mid;
+    public static ArrayList<String> merge(ArrayList<String> L, ArrayList<String> R) {
+        ArrayList<String> merged = new ArrayList<>();
+        int i=0, j=0;
 
-        String[] temp1 = new String[size1];
-        String[] temp2 = new String[size2];
-
-        for (int i = 0; i < size1; i++) {
-            temp1[i] = a[l+i];
-        }
-        for (int j = 0; j < size2; j++) {
-            temp2[j] = a[mid+1+j];
-        }
-
-        // merge the two smaller temp arrays together into a[]
-        int i = 0;
-        int j = 0;
-        int k = l;
-
-        while(i<size1 && j<size2) {
-            if (temp1[i].compareTo(temp2[j]) <= 0) {
-                a[k] = temp1[i];
+        //merges L and R
+        while(i<L.size() && j<R.size()) {
+            if(L.get(i).compareTo(R.get(i)) <=0) {
+                merged.add(L.get(i));
                 i++;
             } else {
-                a[k] = temp2[j];
+                merged.add(R.get(j));
                 j++;
             }
-            k++;
         }
 
-        // merge any remaining elements from either
-        while(i < size1) {
-            a[k] = temp1[i];
+        //add remaining if needed
+        while(i<L.size()) {
+            merged.add(L.get(i));
             i++;
-            k++;
         }
 
-        while(j<size2) {
-            a[k] = temp2[j];
+        while(j<R.size()) {
+            merged.add(R.get(j));
             j++;
-            k++;
         }
+
+        return merged;
     }
 
-    public static String[] getData() {
-        int i = 0;
-        int maxsize = 1000;
-
+    //(from qs.java)
+    public static ArrayList<String> getData() {
         Scanner input = new Scanner(System.in);
-        String[] data = new String[maxsize];
-
-        // Determine proper size of the array based on file length
-        int newSize = 0;
-
-        while(input.hasNextLine() && i < maxsize) {
+        ArrayList<String> data = new ArrayList<>();
+        while(input.hasNextLine()) {
             String line = input.nextLine();
-
-            if(line.isEmpty()) {
-                break;
-            }
-
-            data[i] = line;
-            i++;
-            newSize++;
+            if(line.isEmpty())break;
+            data.add(line);
         }
 
         input.close();
-
-        // Create a new array with the correct length
-        String[] result = new String[newSize];
-        for(int j = 0; j < newSize; j++) {
-            result[j] = data[j];
-        }
-
-        return result;
+        return data;
     }
 }
